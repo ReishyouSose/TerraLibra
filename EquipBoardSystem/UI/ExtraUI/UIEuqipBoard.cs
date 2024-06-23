@@ -4,8 +4,8 @@ using ReLogic.Content;
 using RUIModule.RUIElements;
 using TerraLibra.EquipBoardSystem.System;
 using Terraria;
-using Terraria.Localization;
 using static TerraLibra.EquipBoardSystem.System.EquipBoardData;
+using static TerraLibra.MiscHelper;
 
 namespace TerraLibra.EquipBoardSystem.UI.ExtraUI
 {
@@ -15,7 +15,7 @@ namespace TerraLibra.EquipBoardSystem.UI.ExtraUI
     {
         private readonly EquipBoard eb = eb;
         private readonly Asset<Texture2D> bg = extraTexs["Back"];
-        private Item item = item;
+        private readonly Item item = item;
         private int index;
         public override void OnInitialization()
         {
@@ -32,7 +32,7 @@ namespace TerraLibra.EquipBoardSystem.UI.ExtraUI
                 UIImage reject = new(extraTexs["Reject"].Value);
                 reject.SetPos(180, 170);
                 reject.Events.OnLeftDoubleClick += evt => EBSysUI.Ins.needRemoveTemp = true;
-                reject.hoverText = Language.GetTextValue("Mods.EquipBoardSystem.Info.Reject");
+                reject.hoverText = GTV("Info.Reject");
                 UnHoverHidden(reject);
                 Register(reject);
 
@@ -56,7 +56,7 @@ namespace TerraLibra.EquipBoardSystem.UI.ExtraUI
                     ebs[index] = eb.Clone(index);
                     EBSysUI.Ins.needRemoveTemp = true;
                 };
-                accept.hoverText = Language.GetTextValue("Mods.EquipBoardSystem.Info.Accept");
+                accept.hoverText = GTV("Info.Accept");
                 UnHoverHidden(accept);
                 Register(accept);
 
@@ -70,7 +70,7 @@ namespace TerraLibra.EquipBoardSystem.UI.ExtraUI
                     index--;
                     SetPos(x - 322, 0);
                 };
-                toLeft.hoverText = Language.GetTextValue("Mods.EquipBoardSystem.Info.Left");
+                toLeft.hoverText = GTV("Info.Left");
                 UnHoverHidden(toLeft);
                 Register(toLeft);
 
@@ -84,7 +84,7 @@ namespace TerraLibra.EquipBoardSystem.UI.ExtraUI
                     index++;
                     SetPos(x + 322, 0);
                 };
-                toRight.hoverText = Language.GetTextValue("Mods.EquipBoardSystem.Info.Right");
+                toRight.hoverText = GTV("Info.Right");
                 UnHoverHidden(toRight);
                 Register(toRight);
             }

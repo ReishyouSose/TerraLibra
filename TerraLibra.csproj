@@ -8,6 +8,9 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Localization\zh-Hans_Mods.TerraLibra.hjson" />
+	</ItemGroup>
+	<ItemGroup>
 	  <ProjectReference Include="..\RUIModule\RUIModule.csproj" />
 	</ItemGroup>
 

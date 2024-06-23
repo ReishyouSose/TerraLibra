@@ -1,3 +1,4 @@
 displayName = TerraLibra
 author = Reits
 version = 0.1
+modReferences = RUIModule

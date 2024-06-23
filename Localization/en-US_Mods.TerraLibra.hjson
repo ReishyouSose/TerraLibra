@@ -1,0 +1,73 @@
+Keybinds.Check.DisplayName: ���װ�������
+
+Info: {
+	Tooltip: Component Infos
+	All: Bonus Statistics
+	Now: Current Bonus
+	Reject: Double click to Reject
+	Accept: Double click to Accept or Override
+	Left: Move to Left
+	Right: Move to right
+	Condition:
+		'''
+		Starting from n = 1, it will drop with a probability of (1/n)%
+		If the previous one is successful, n += 1
+		and the judgment will continue until the max value
+		'''
+	ViewItd: View mod introduction
+	Back: Back
+}
+
+Bonus: {
+	Gem: Gem Slot
+	ScaleRight: Component on the right's effect increase by {0} times
+	ScaleLeft: Component on the left's effect increase by {0} times
+	Damage: Damage increase {0}%
+	Crit: Crit chance {0}%
+	Health: Max health {0}
+	Mana: Max mana {0}
+	Defense: Defense {0}
+	Move: MoveSpeed {0}%
+	Endurence: Endurance {0}%
+	Dodge: Dodge rate {0}%
+	Vampire: Vampire {0}
+	LifeRegen: Life regen {0}
+	Minion: Max minion slot {0}
+	Sentry: Max turret slot {0}
+}
+
+Introduction:
+	'''
+	About activation:
+	The equip board corresponds to the armor/accessories slot
+	Up to three equip board can be activated per slot
+	If there are more than three, the new coverage position must be selected
+	Of course, you can also give up the equip board
+	Only one component per column in the equip board can be activated
+	Double-click to select the component you want
+
+	About getting:
+	Equip board can be obtained from Boss treasure bags
+	The maximum level of the equip board will increase as the game progresses
+	'''
+
+Items: {
+	EBChest: {
+		DisplayName: Equip Board
+		Tooltip:
+			'''
+			{$CommonItemTooltipRightClickToOpen}
+			Get an random equip board
+			'''
+	}
+}
+
+Configs: {
+	EBConfig: {
+		MaxDodge: {
+		}
+
+		VampireCD: {
+		}
+	}
+}

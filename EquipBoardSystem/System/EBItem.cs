@@ -15,18 +15,25 @@ namespace TerraLibra.EquipBoardSystem.System
             TagCompound dict = [];
             for (int i = 0; i < 3; i++)
             {
-                ebs[i].SaveData(out TagCompound infos);
-                dict[i.ToString()] = infos;
+                EquipBoard eb = ebs[i];
+                if (eb != null)
+                {
+                    eb.SaveData(out TagCompound infos);
+                    dict[i.ToString()] = infos;
+                }
             }
             tag["ebs"] = dict;
         }
         public override void LoadData(Item item, TagCompound tag)
         {
-            if (tag.TryGet("ebs", out TagCompound dict))
+            if (tag.TryGet("ebs", out TagCompound info))
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    ebs[i] = EquipBoard.LoadData(i, dict.Get<TagCompound>(i.ToString()));
+                    if (info.TryGet(i.ToString(), out TagCompound infos))
+                    {
+                        ebs[i] = EquipBoard.LoadData(i, infos);
+                    }
                 }
             }
         }
@@ -34,7 +41,7 @@ namespace TerraLibra.EquipBoardSystem.System
         {
             for (int i = 0; i < 3; i++)
             {
-                ebs[i].Update(player);
+                ebs[i]?.Update(player);
             }
         }
     }

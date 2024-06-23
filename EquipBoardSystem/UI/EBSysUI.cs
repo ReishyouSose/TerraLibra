@@ -1,12 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using RUIModule.RUIElements;
+using RUIModule.RUISys;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TerraLibra.EquipBoardSystem.System;
+using TerraLibra.EquipBoardSystem.UI.ExtraUI;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.Localization;
+using static TerraLibra.MiscHelper;
 
 namespace TerraLibra.EquipBoardSystem.UI;
 
@@ -17,7 +20,7 @@ public class EBSysUI : ContainerElement
     private UIBottom ebView, tempView, statView, filterView, itdView;
     private static Player Player => Main.LocalPlayer;
     public EquipBoard TempEB { get; private set; }
-    public Item selectItem;
+    public Item SelectItem { get; private set; }
     public bool needRemoveTemp;
     public override void OnInitialization()
     {
@@ -25,31 +28,44 @@ public class EBSysUI : ContainerElement
 
         TempEB = null;
 
-        UIPanel bg = new(140 + 312 * 3, 650, Color.Gray, 0.5f);
+        UIPanel bg = new(Color.Gray, 0.5f);
+        bg.SetSize(140 + 312 * 3, 650);
         bg.SetCenter(150, 0, 0.5f, 0.5f);
         bg.Info.SetMargin(20);
         bg.canDrag = true;
         bg.Info.IsSensitive = true;
         Register(bg);
 
-        itdView = new(0, 0, 1, 1);
+        itdView = new();
+        itdView.SetSize(0, 0, 1, 1);
         itdView.Info.IsVisible = false;
         bg.Register(itdView);
 
-        filterView = new(72, 0, 0, 1);
+        filterView = new();
+        filterView.SetSize(72, 0, 0, 1);
         filterView.SetPos(-72, 0, 1);
-        filterView.DrawRec[0] = Color.White;
         bg.Register(filterView);
 
-        ebView = new(-82, 194, 1);
+        for (int i = 0; i < 10; i++)
+        {
+            UIEBItem slot = new(i);
+            slot.SetPos(0, i * 62);
+            slot.Slot.overrideSlot = AssetLoader.Slot;
+            filterView.Register(slot);
+        }
+
+        ebView = new();
+        ebView.SetSize(-82, 194, 1);
         ebView.SetPos(0, 0);
         bg.Register(ebView);
 
-        tempView = new(-82, 200, 1);
+        tempView = new();
+        tempView.SetSize(-82, 200, 1);
         tempView.SetPos(0, 200);
         bg.Register(tempView);
 
-        statView = new(-82, 200, 1);
+        statView = new();
+        statView.SetSize(-82, 200, 1);
         statView.SetPos(0, 400);
         bg.Register(statView);
     }
@@ -60,7 +76,8 @@ public class EBSysUI : ContainerElement
         {
             tempView.RemoveAll();
             statView.RemoveAll();
-            Info.IsVisible = false;
+            ReCalculateNowStatistics();
+            ReCalculateAllStatistics();
             TempEB = null;
             needRemoveTemp = false;
         }
@@ -73,6 +90,90 @@ public class EBSysUI : ContainerElement
         TempEB = null;
         needRemoveTemp = false;
     }
+    public void ChangeView(Item item = null)
+    {
+        Info.IsVisible = true;
+        if (TempEB != null)
+            return;
+        if (item == null)
+        {
+            item = SelectItem;
+        }
+        else
+            SelectItem = item;
+        if (item.IsAir)
+            return;
+        var ebs = item.GetGlobalItem<EBItem>().ebs;
+        ebView.RemoveAll();
+        for (int i = 0; i < 3; i++)
+        {
+            UIEuqipBoard ueb = new(ebs[i], item, false);
+            ueb.SetPos(i * 322, 0);
+            ebView.Register(ueb);
+        }
+        ReCalculateNowStatistics();
+    }
+    public void NewEB(Item item)
+    {
+        if (TempEB != null)
+            return;
+        var ebs = item.GetWaitEBs();
+        TempEB = ebs[0];
+        ebs.RemoveAt(0);
+        ebView.Info.IsVisible = true;
+        tempView.Info.IsVisible = true;
+        statView.Info.IsVisible = true;
+        itdView.Info.IsVisible = false;
+        tempView.RemoveAll();
+        statView.RemoveAll();
+
+        if (SelectItem != item)
+        {
+            SelectItem = item;
+            ChangeView(SelectItem);
+        }
+
+        UIEuqipBoard temp = new(TempEB, SelectItem, true);
+        temp.SetPos(322, 0);
+        tempView.Register(temp);
+
+        ShowStatIntroduction();
+    }
+    public void ShowStatIntroduction()
+    {
+        UIText info = new(GTV("Info.Tooltip"));
+        info.SetPos(0, 0);
+        statView.Register(info);
+
+        UIImage line = new(TextureAssets.MagicPixel.Value);
+        line.SetSize(-10, 2, 1);
+        line.SetPos(0, 28);
+        statView.Register(line);
+
+        var texs = EquipBoardData.EBTexs;
+        var values = EquipBoardData.EBValues;
+        int x = 0, y = 0;
+        for (EnumID<EffModuleID> i = 1; i.EnumValue < EffModuleID.Count; i++)
+        {
+            StringBuilder item = new(' ');
+            var cTexs = texs[i];
+            var cValues = values[i];
+            for (int j = 0; j < 3; j++)
+            {
+                item.Append($"[i:{cTexs[j]}]");
+                item.Append(cValues[j]);
+                item.Append(j < 2 ? '/' : ' ');
+            }
+            UIText desc = new(Desc(i.EnumValue, item.ToString(), false));
+            desc.SetPos(x, ++y * 38);
+            if (y == 5)
+            {
+                y = 0;
+                x += 322;
+            }
+            statView.Register(desc);
+        }
+    }
     public void ReCalculateNowStatistics()
     {
         if (TempEB != null)
@@ -80,7 +181,7 @@ public class EBSysUI : ContainerElement
         Dictionary<int, int> stats = [];
         tempView.RemoveAll();
 
-        UIText now = new(Language.GetTextValue("Mods.EquipBoardSystem.Info.Now"));
+        UIText now = new(GTV("Info.Now"));
         now.SetPos(0, 0);
         tempView.Register(now);
 
@@ -89,10 +190,15 @@ public class EBSysUI : ContainerElement
         line.SetPos(0, 28);
         tempView.Register(line);
 
-        var ebs = selectItem.GetGlobalItem<EBItem>().ebs;
-
+        var ebs = SelectItem?.GetGlobalItem<EBItem>().ebs;
+        if (ebs == null)
+            return;
         foreach (EquipBoard eb in ebs)
         {
+            if (eb == null)
+            {
+                continue;
+            }
             for (int i = 0; i < 4; i++)
             {
                 TryAddStat(stats, eb.up[i]);
@@ -129,12 +235,12 @@ public class EBSysUI : ContainerElement
         Dictionary<int, int> stats = [];
         statView.RemoveAll();
 
-        UIText all = new(Language.GetTextValue("Mods.EquipBoardSystem.Info.All"));
+        UIText all = new(GTV("Info.All"));
         all.SetSize(all.TextSize);
         all.SetPos(0, 0);
         statView.Register(all);
 
-        UIText itd = new(Language.GetTextValue("Mods.EquipBoardSystem.Info.ViewItd"));
+        UIText itd = new(GTV("Info.ViewItd"));
         itd.SetSize(itd.TextSize);
         itd.SetPos(all.Width + 20, 0);
         itd.Events.OnMouseOver += evt => itd.color = Color.Gold;
@@ -195,10 +301,10 @@ public class EBSysUI : ContainerElement
     }
     private static string Desc(EffModuleID type, string value, bool addIcon = true)
     {
-        LocalizedText desc = Language.GetText("Mods.EquipBoardSystem.Bonus." + type).WithFormatArgs(value);
+        string desc = GTV("Bonus." + type, value);
         if (addIcon)
         {
-            return "[i:" + type switch
+            desc = "[i:" + type switch
             {
                 EffModuleID.Damage => ItemID.Zenith,
                 EffModuleID.Crit => ItemID.EyeoftheGolem,
@@ -213,9 +319,9 @@ public class EBSysUI : ContainerElement
                 EffModuleID.Minion => ItemID.StardustDragonStaff,
                 EffModuleID.Sentry => ItemID.RainbowCrystalStaff,
                 _ => 0
-            } + "]" + desc.Value;
+            } + "]" + desc;
         }
-        return desc.Value;
+        return desc;
     }
     private void SeeIntroduction()
     {
@@ -230,7 +336,7 @@ public class EBSysUI : ContainerElement
             {
                 itdView.RemoveAll();
 
-                UIText back = new(Language.GetTextValue("Mods.EquipBoardSystem.Info.Back"));
+                UIText back = new(GTV("Info.Back"));
                 back.SetSize(back.TextSize);
                 back.SetPos(0, 0);
                 back.Events.OnLeftDown += evt => SeeIntroduction();
@@ -238,7 +344,7 @@ public class EBSysUI : ContainerElement
                 back.Events.OnMouseOut += evt => back.color = Color.White;
                 itdView.Register(back);
 
-                UIText itd = new(Language.GetTextValue("Mods.EquipBoardSystem.Introduction"));
+                UIText itd = new(GTV("Introduction"));
                 itd.SetPos(0, 60);
                 itdView.Register(itd);
             }

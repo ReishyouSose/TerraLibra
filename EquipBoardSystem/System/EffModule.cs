@@ -49,6 +49,7 @@ public class EffModule
         this.type = type;
         this.level = level;
         scale = 1;
+        drawScale = 1;
         if (type > 0)
         {
             int texID = EBTexs[type][level - 1];
@@ -56,10 +57,13 @@ public class EffModule
             iconTex = TextureAssets.Item[texID];
             drawScale = iconTex.Size().AutoScale(44);
         }
+        else if (type == EffModuleID.Gem)
+        {
+            iconTex = null;
+        }
         else if (type < 0)
         {
             iconTex = extraTexs[type.ToString() + (type == EffModuleID.Gem ? "" : level)];
-            drawScale = 1;
         }
     }
     public void CheckState()
@@ -87,7 +91,10 @@ public class EffModule
         {
             Main.hoverItemName = desc;
         }
-        sb.Draw(slotTex.Value, pos, Color.White);
+        if (slotTex != null)
+        {
+            sb.Draw(slotTex.Value, pos, Color.White);
+        }
         if (active)
         {
             sb.Draw(activeTex.Value, pos, Color.White);
@@ -99,14 +106,16 @@ public class EffModule
             sb.Draw(iconTex.Value, pos + Vector2.One * 26, null, Color.White,
                 0, iconTex.Size() / 2f, drawScale, 0, 0);
         }
-        else
+        else if (iconTex != null)
             sb.Draw(iconTex.Value, pos, Color.White);
     }
     public string ChangeDesc()
     {
         if (type == 0)
             return "";
-        LocalizedText desc = Language.GetText("Mods.EquipBoardSystem.Bonus." + type);
+        LocalizedText desc = Language.GetText(MiscHelper.LocalKey + "Bonus." + type);
+        if (type == -3)
+            return desc.Value;
         int value = EBValues[type][level - 1];
         object obj;
         if (type == EffModuleID.Gem)

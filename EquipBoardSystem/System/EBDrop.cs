@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.Localization;
+using static TerraLibra.MiscHelper;
 
 namespace TerraLibra.EquipBoardSystem.System
 {
@@ -12,7 +12,7 @@ namespace TerraLibra.EquipBoardSystem.System
 
         public bool CanShowItemDropInUI() => true;
 
-        public string GetConditionDescription() => Language.GetTextValue("Mods.EquipBoardSystem.Info.Condition");
+        public string GetConditionDescription() => GTV("Info.Condition");
     }
 
     internal class UntilFailure() : IItemDropRule
@@ -27,9 +27,10 @@ namespace TerraLibra.EquipBoardSystem.System
         public ItemDropAttemptResult TryDroppingItem(DropAttemptInfo info)
         {
             Item item = EquipBoard.RandomChoose(info.player);
-            if (info.rng.NextFloat() < (info.npc.boss ? 0.05f : 0.001f))
+            //if (info.rng.NextFloat() < (info.npc.boss ? 0.05f : 0.001f))
             {
                 item.GetGlobalItem<EBItem>().waitEbs.Add(new EquipBoard());
+                Main.NewText(item.Name + "获得一块装备盘");
                 return new() { State = ItemDropAttemptResultState.Success };
             }
             return new() { State = ItemDropAttemptResultState.FailedRandomRoll };

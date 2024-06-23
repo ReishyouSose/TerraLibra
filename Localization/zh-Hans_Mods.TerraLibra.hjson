@@ -1,0 +1,73 @@
+Keybinds.Check.DisplayName: 检查装备盘面板
+
+Info: {
+	Tooltip: 元件信息
+	All: 加成统计
+	Now: 当前加成
+	Reject: 双击以拒绝
+	Accept: 双击以接受或覆盖
+	Left: 向左移动
+	Right: 向右移动
+	Condition:
+		'''
+		从n = 1开始以（1/n）%概率掉落
+		前一个成功则 n += 1
+		并继续判定直到最大值
+		'''
+	ViewItd: 查看模组介绍
+	Back: 返回
+}
+
+Bonus: {
+	Gem: 元件宝石栏位
+	ScaleRight: 右边相邻元件的效果提升{0}倍
+	ScaleLeft: 左边相邻元件的效果提升{0}倍
+	Damage: 伤害增加 {0}
+	Crit: 暴击率 {0}%
+	Health: 最大生命值 {0}
+	Mana: 最大法力值 {0}
+	Defense: 防御力 {0}
+	Move: 移动速度 {0}%
+	Endurence: 伤害减免 {0}%
+	Dodge: 闪避率 {0}%
+	Vampire: 生命偷取 {0}
+	LifeRegen: 生命再生 {0}
+	Minion: 最大召唤栏 {0}
+	Sentry: 最大哨兵栏 {0}
+}
+
+Introduction:
+	'''
+	关于激活：
+	装备盘与盔甲/饰品栏位是对应的
+	每个栏位可以激活最多三个装备盘
+	超出三个时新的必须选择覆盖位置
+	当然你也可以放弃该装备盘
+	装备盘中的元件每列只能激活一个
+	双击来选择你要的元件
+
+	关于获取：
+	装备盘可以从Boss宝藏袋中获得
+	装备盘的最高等级会随着游戏进度而提高
+	'''
+
+Items: {
+	EBChest: {
+		DisplayName: 装备盘
+		Tooltip:
+			'''
+			{$CommonItemTooltip.RightClickToOpen}
+			获得一个随机装备盘
+			'''
+	}
+}
+
+Configs: {
+	EBConfig: {
+		MaxDodge: {
+		}
+
+		VampireCD: {
+		}
+	}
+}

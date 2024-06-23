@@ -32,7 +32,7 @@ namespace TerraLibra.EquipBoardSystem.System
         internal static ModKeybind check;
         public override void Load()
         {
-            check = KeybindLoader.RegisterKeybind(Mod, "Check Equip", Keys.K);
+            check = KeybindLoader.RegisterKeybind(Mod, "Check", Keys.K);
         }
         public override void ResetEffects()
         {
@@ -42,6 +42,12 @@ namespace TerraLibra.EquipBoardSystem.System
                 vampireCD--;
             if (vampireBreak > 0)
                 vampireBreak--;
+        }
+        public override void OnEnterWorld()
+        {
+            EBSysUI ui = EBSysUI.Ins;
+            ui.ReCalculateNowStatistics();
+            ui.ReCalculateAllStatistics();
         }
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
@@ -55,8 +61,11 @@ namespace TerraLibra.EquipBoardSystem.System
                 }
                 else
                 {
-                    ui.ReCalculateNowStatistics();
-                    ui.ReCalculateAllStatistics();
+                    ui.Info.IsVisible = true;
+                    if (Main.HoverItem.type > ItemID.None)
+                    {
+                        ui.ChangeView(Main.HoverItem);
+                    }
                 }
             }
         }

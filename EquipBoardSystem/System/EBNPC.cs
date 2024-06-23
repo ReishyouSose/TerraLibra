@@ -12,5 +12,9 @@ namespace TerraLibra.EquipBoardSystem.System
 
             }
         }
+        public override void ModifyGlobalLoot(GlobalLoot globalLoot)
+        {
+            globalLoot.Add(new UntilFailure());
+        }
     }
 }

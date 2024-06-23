@@ -1,0 +1,30 @@
+Mods: {
+	TerraLibra: {
+		// "Keybinds.Check Equip.DisplayName": Check  Equip
+
+		Configs: {
+			EBConfig: {
+				DisplayName: 平衡性设置
+
+				balanceMode: {
+					// Label: balance Mode
+					// Tooltip: ""
+				}
+
+				MaxDodge: {
+					Label: 最大闪避（%）
+					Tooltip: 限制最大闪避率
+				}
+
+				VampireCD: {
+					Label: 吸血冷却（秒）
+					Tooltip:
+						'''
+						吸血效果完全恢复所需的时间
+						设为零即关闭
+						'''
+				}
+			}
+		}
+	}
+}

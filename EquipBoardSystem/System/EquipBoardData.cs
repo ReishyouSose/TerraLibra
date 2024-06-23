@@ -41,7 +41,7 @@ namespace TerraLibra.EquipBoardSystem.System
             Add(EffModuleID.None, 0, 0, 0, 0, 0, 0, null);
             DamageClass generic = DamageClass.Generic;
             Add(EffModuleID.Damage, ItemID.NightsEdge, ItemID.TerraBlade, ItemID.Zenith,
-               1, 2, 3, (p, l, s) => p.GetDamage(generic) += valueScale[l - 1] * s);
+               10, 25, 50, (p, l, s) => p.GetDamage(generic) += valueScale[l - 1] * s);
             Add(EffModuleID.Crit, ItemID.RagePotion, ItemID.DestroyerEmblem, ItemID.EyeoftheGolem,
                 2, 4, 6, (p, l, s) => p.GetCritChance(generic) += l * 2 * s);
             Add(EffModuleID.Health, ItemID.LifeCrystal, ItemID.LifeFruit, ItemID.AegisCrystal,
@@ -64,10 +64,11 @@ namespace TerraLibra.EquipBoardSystem.System
                 1, 2, 3, (p, l, s) => p.maxMinions += l * s);
             Add(EffModuleID.Sentry, ItemID.HoundiusShootius, ItemID.StaffoftheFrostHydra, ItemID.RainbowCrystalStaff,
                 1, 2, 3, (p, l, s) => p.maxTurrets += l * s);
+            LoadAssets();
         }
-        public static void AssetLoader_ExtraLoad(Dictionary<string, Texture2D> extraTex)
+        private static void LoadAssets()
         {
-            string path = "EquipBoardSystem/Assets/";
+            string path = "TerraLibra/Assets/";
             Asset<Texture2D> T2D(string name) => ModContent.Request<Texture2D>(path + name);
             void ExTexs(params string[] names)
             {

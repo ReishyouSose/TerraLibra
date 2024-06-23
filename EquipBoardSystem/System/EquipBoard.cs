@@ -99,9 +99,9 @@ public class EquipBoard
     }
     private int RollEffModule(Terraria.Utilities.UnifiedRandom rng, ref int emlevel)
     {
-        if (rng.NextBool(level, 10))
+        if (rng.NextBool(level * level, 50))
         {
-            return rng.NextBool() ? -1 : -2;
+            return -rng.Next(3) - 1;
         }
         return rng.Next((int)EffModuleID.Count);
     }
@@ -206,7 +206,7 @@ public class EquipBoard
             TagCompound info = [];
             EffModule em = i < 4 ? up[i] : down[i - 4];
             info["level"] = em.level;
-            info["type"] = em.type;
+            info["type"] = em.type.IntValue;
             infos[$"{i}"] = info;
             if (em.active)
             {
