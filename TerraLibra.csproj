@@ -7,6 +7,9 @@
 	<PropertyGroup>
 		
 	</PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\RUIModule\RUIModule.csproj" />
+	</ItemGroup>
 
 	<!-- References -->
 
