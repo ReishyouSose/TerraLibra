@@ -8,8 +8,8 @@ namespace TerraLibra.EquipBoardSystem.System
     public class EBItem : GlobalItem
     {
         public override bool InstancePerEntity => true;
-        public EquipBoard[] ebs = new EquipBoard[3];
-        public List<EquipBoard> waitEbs = [];
+        public readonly EquipBoard[] ebs = new EquipBoard[3];
+        public readonly List<EquipBoard> waitEbs = [];
         public override void SaveData(Item item, TagCompound tag)
         {
             TagCompound dict = [];
@@ -26,14 +26,12 @@ namespace TerraLibra.EquipBoardSystem.System
         }
         public override void LoadData(Item item, TagCompound tag)
         {
-            if (tag.TryGet("ebs", out TagCompound info))
+            if (!tag.TryGet("ebs", out TagCompound info)) return;
+            for (int i = 0; i < 3; i++)
             {
-                for (int i = 0; i < 3; i++)
+                if (info.TryGet(i.ToString(), out TagCompound infos))
                 {
-                    if (info.TryGet(i.ToString(), out TagCompound infos))
-                    {
-                        ebs[i] = EquipBoard.LoadData(i, infos);
-                    }
+                    ebs[i] = EquipBoard.LoadData(i, infos);
                 }
             }
         }
