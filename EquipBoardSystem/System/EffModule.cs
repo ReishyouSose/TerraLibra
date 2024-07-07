@@ -14,18 +14,17 @@ public enum EffModuleID : int
     ScaleRight,
     ScaleLeft,
     None,
-    Damage,
-    Crit,
-    Health,
-    Mana,
-    Defense,
-    Move,
-    Endurence,
-    Dodge,
-    Vampire,
-    LifeRegen,
-    Minion,
-    Sentry,
+    Damage,// 5 10 15
+    Crit,// 2 4 6
+    Health,// 40 60 80
+    Mana,// 40 80 120
+    Defense,// 4 6 8
+    Move,// 2 4 6
+    Endurence,// 2 4 6 （1 / （1.xx 乘算））
+    Dodge,// 1 2 3 (x / (x + 100))
+    LifeRegen,// 1 2 3
+    Minion,// 1 2 3
+    Sentry,// 1 2 3
     Count,
 }
 public class EffModule
